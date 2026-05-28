@@ -4,19 +4,27 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>D1 mini 光照感測器資料上傳雲端教材</title>
+
+  <!-- Prism.js：讓程式碼有漂亮的語法上色，可直接用於 GitHub Pages -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
+
   <style>
     :root {
       --bg: #f4f1ec;
       --paper: #fffdf8;
+      --paper-soft: #f8f4ee;
       --paper-2: #ebe4dc;
       --ink: #35322f;
       --muted: #746f68;
       --line: #d6cbbf;
       --accent: #9f8f7b;
+      --accent-dark: #7f705f;
       --accent-2: #b9aa93;
       --accent-3: #8fa092;
       --accent-4: #c3a99b;
-      --code-bg: #2f3432;
+      --code-bg: #282c34;
+      --code-head: #343941;
       --code-ink: #f3eee7;
       --warn-bg: #f6eadf;
       --warn-line: #c69b7c;
@@ -60,7 +68,7 @@
     }
 
     .hero-card {
-      background: rgba(255, 253, 248, 0.86);
+      background: rgba(255, 253, 248, 0.88);
       border: 1px solid rgba(214, 203, 191, 0.8);
       border-radius: var(--radius-lg);
       box-shadow: var(--shadow);
@@ -92,6 +100,8 @@
       font-weight: 700;
       letter-spacing: 0.06em;
       margin-bottom: 18px;
+      position: relative;
+      z-index: 2;
     }
 
     .eyebrow::before {
@@ -111,6 +121,8 @@
     h1 {
       font-size: clamp(34px, 5vw, 58px);
       max-width: 820px;
+      position: relative;
+      z-index: 2;
     }
 
     .hero p {
@@ -118,6 +130,8 @@
       margin: 22px 0 0;
       color: var(--muted);
       font-size: 18px;
+      position: relative;
+      z-index: 2;
     }
 
     .hero-actions {
@@ -141,6 +155,7 @@
       font-weight: 700;
       color: var(--ink);
       transition: 0.2s ease;
+      cursor: pointer;
     }
 
     .btn.primary {
@@ -159,7 +174,7 @@
       top: 0;
       z-index: 20;
       backdrop-filter: blur(12px);
-      background: rgba(244, 241, 236, 0.82);
+      background: rgba(244, 241, 236, 0.86);
       border-bottom: 1px solid rgba(214, 203, 191, 0.7);
     }
 
@@ -201,9 +216,9 @@
     }
 
     .step-mark {
-      width: 46px;
-      height: 46px;
-      border-radius: 16px;
+      width: 52px;
+      height: 52px;
+      border-radius: 17px;
       display: grid;
       place-items: center;
       color: #fffdf8;
@@ -303,12 +318,16 @@
       font-size: 17px;
     }
 
+    /* ================================
+       美化程式碼區塊
+    ================================= */
     .code-card {
       overflow: hidden;
-      border-radius: var(--radius-md);
-      border: 1px solid rgba(214, 203, 191, 0.9);
-      box-shadow: 0 12px 34px rgba(67, 58, 48, 0.10);
+      border-radius: 22px;
+      border: 1px solid rgba(214, 203, 191, 0.92);
+      box-shadow: 0 16px 38px rgba(49, 43, 36, 0.16);
       background: var(--code-bg);
+      margin-top: 18px;
     }
 
     .code-head {
@@ -317,10 +336,42 @@
       gap: 12px;
       align-items: center;
       padding: 13px 16px;
-      background: #3d433f;
+      background: linear-gradient(180deg, #3d424a, #343941);
       color: var(--code-ink);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .code-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
       font-size: 14px;
       font-weight: 800;
+    }
+
+    .window-dots {
+      display: inline-flex;
+      gap: 6px;
+      flex: 0 0 auto;
+    }
+
+    .window-dots i {
+      display: block;
+      width: 11px;
+      height: 11px;
+      border-radius: 999px;
+      opacity: 0.92;
+    }
+
+    .window-dots i:nth-child(1) { background: #c8847a; }
+    .window-dots i:nth-child(2) { background: #c8ad6d; }
+    .window-dots i:nth-child(3) { background: #8fa092; }
+
+    .file-name {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .copy-btn {
@@ -328,29 +379,77 @@
       background: rgba(255, 255, 255, 0.08);
       color: var(--code-ink);
       border-radius: 999px;
-      padding: 6px 12px;
+      padding: 7px 13px;
       cursor: pointer;
+      font-weight: 800;
+      font-size: 13px;
+      transition: 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .copy-btn:hover {
+      background: rgba(255, 255, 255, 0.14);
+      transform: translateY(-1px);
+    }
+
+    .code-card pre[class*="language-"] {
+      margin: 0;
+      padding: 22px 22px 22px 3.8em;
+      max-height: 620px;
+      overflow: auto;
+      background: var(--code-bg);
+      font-size: 15px;
+      line-height: 1.68;
+      tab-size: 4;
+    }
+
+    .code-card code[class*="language-"] {
+      font-family: "Cascadia Code", "JetBrains Mono", "Fira Code", Consolas, Monaco, monospace;
+      text-shadow: none;
+    }
+
+    .line-numbers .line-numbers-rows {
+      border-right-color: rgba(255, 255, 255, 0.12);
+    }
+
+    .line-numbers-rows > span::before {
+      color: rgba(243, 238, 231, 0.38);
+    }
+
+    .code-caption {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 12px 16px 14px;
+      background: #30353d;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .code-caption span {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 4px 10px;
+      background: rgba(255, 255, 255, 0.08);
+      color: rgba(243, 238, 231, 0.82);
+      font-size: 12px;
       font-weight: 700;
     }
 
-    pre {
-      margin: 0;
-      padding: 22px;
-      overflow-x: auto;
-      color: var(--code-ink);
-      font-size: 15px;
-      line-height: 1.62;
-    }
-
-    code {
-      font-family: "Cascadia Code", "Consolas", monospace;
+    .inline-code {
+      padding: 2px 6px;
+      border-radius: 7px;
+      background: #eee7de;
+      color: #554d45;
+      font-family: "Cascadia Code", Consolas, monospace;
+      font-size: 0.92em;
     }
 
     .note {
       padding: 18px 20px;
       border-radius: var(--radius-md);
       border: 1px solid var(--line);
-      background: rgba(255, 253, 248, 0.72);
+      background: rgba(255, 253, 248, 0.76);
       color: var(--muted);
       margin: 18px 0;
     }
@@ -443,6 +542,7 @@
       background: rgba(255, 253, 248, 0.85);
       border-radius: var(--radius-md);
       padding: 16px 18px;
+      margin-top: 18px;
     }
 
     summary {
@@ -494,9 +594,19 @@
         padding: 28px 20px;
       }
 
-      pre {
+      .section-head {
+        grid-template-columns: 1fr;
+      }
+
+      .code-head {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .code-card pre[class*="language-"] {
         font-size: 13px;
-        padding: 18px;
+        padding-top: 18px;
+        padding-bottom: 18px;
       }
     }
   </style>
@@ -554,6 +664,12 @@
           <p>透過 Replit 橋接 Make Webhook，再把資料寫入 Google Sheets，完成簡單的物聯網資料蒐集流程。</p>
         </article>
       </div>
+
+      <div class="note warning">
+        <strong>公開 GitHub Pages 前請注意：</strong>
+        不要把真實 Wi-Fi 密碼、Make Webhook URL 或 Replit URL 直接放在公開網頁中。
+        本教材使用 <code class="inline-code">請填入...</code> 作為替換欄位，課堂測試時再由學生自行填寫。
+      </div>
     </section>
 
     <section id="part1">
@@ -595,12 +711,12 @@
               <tbody>
                 <tr>
                   <td>SCL</td>
-                  <td><code>Pin(5)</code></td>
+                  <td><code class="inline-code">Pin(5)</code></td>
                   <td>D1</td>
                 </tr>
                 <tr>
                   <td>SDA</td>
-                  <td><code>Pin(4)</code></td>
+                  <td><code class="inline-code">Pin(4)</code></td>
                   <td>D2</td>
                 </tr>
               </tbody>
@@ -609,7 +725,7 @@
         </article>
       </div>
 
-      <div class="card">
+      <div class="card" style="margin-top: 18px;">
         <h3>程式流程觀念</h3>
         <div class="flow" aria-label="第一段程式流程">
           <div class="flow-item"><div><strong>建立 I2C</strong>連接感測器</div></div>
@@ -632,10 +748,13 @@
 
       <div class="code-card">
         <div class="code-head">
-          <span>main.py｜讀取亮度測試</span>
+          <div class="code-title">
+            <span class="window-dots"><i></i><i></i><i></i></span>
+            <span class="file-name">main.py｜讀取亮度測試</span>
+          </div>
           <button class="copy-btn" data-copy="code-block-1">複製程式碼</button>
         </div>
-        <pre><code id="code-block-1">import network, urequests, utime, bh1750fvi
+<pre class="line-numbers"><code id="code-block-1" class="language-python">import network, urequests, utime, bh1750fvi
 from machine import Pin, I2C
 
 # 建立 I2C 連線：SCL 使用 GPIO5，SDA 使用 GPIO4
@@ -652,12 +771,18 @@ wifi.connect(ssid, pw)
 
 while not wifi.isconnected():
     pass
+
 print("已連上")
 
 while True:
     light_level = bh1750fvi.sample(i2c, mode=0x23)
     print("亮度: " + str(light_level) + " lux")
     utime.sleep(3)</code></pre>
+        <div class="code-caption">
+          <span>重點：network 模組</span>
+          <span>功能：Wi-Fi 連線</span>
+          <span>輸出：亮度 lux</span>
+        </div>
       </div>
 
       <div class="table-wrap" style="margin-top: 18px;">
@@ -670,23 +795,23 @@ while True:
           </thead>
           <tbody>
             <tr>
-              <td><code>network.WLAN(network.STA_IF)</code></td>
+              <td><code class="inline-code">network.WLAN(network.STA_IF)</code></td>
               <td>讓 D1 mini 進入 Wi-Fi 用戶端模式，像手機或筆電一樣去連接分享器。</td>
             </tr>
             <tr>
-              <td><code>wifi.active(True)</code></td>
+              <td><code class="inline-code">wifi.active(True)</code></td>
               <td>啟用 Wi-Fi 功能。</td>
             </tr>
             <tr>
-              <td><code>wifi.connect(ssid, pw)</code></td>
+              <td><code class="inline-code">wifi.connect(ssid, pw)</code></td>
               <td>使用指定的 Wi-Fi 名稱與密碼進行連線。</td>
             </tr>
             <tr>
-              <td><code>while not wifi.isconnected()</code></td>
+              <td><code class="inline-code">while not wifi.isconnected()</code></td>
               <td>在尚未連上 Wi-Fi 前持續等待。</td>
             </tr>
             <tr>
-              <td><code>bh1750fvi.sample(i2c, mode=0x23)</code></td>
+              <td><code class="inline-code">bh1750fvi.sample(i2c, mode=0x23)</code></td>
               <td>透過 I2C 讀取 BH1750FVI 光照感測器的亮度值。</td>
             </tr>
           </tbody>
@@ -700,8 +825,8 @@ while True:
         <div>
           <h2>第二步：把亮度資料傳到 Google 試算表</h2>
           <p>接下來依照老師示範的 PDF 流程，建立 Make Webhook、Google Sheets 模組，並使用 Replit 作為橋接服務。</p>
-          <a class="btn primary" href="./doc/make-light-sheet-flow.pdf" target="_blank">
-              開啟 PDF 操作流程
+          <a class="btn primary" href="./doc/make-light-sheet-flow.pdf" target="_blank" style="margin-top: 14px;">
+            開啟 PDF 操作流程
           </a>
         </div>
       </div>
@@ -728,7 +853,7 @@ while True:
         </div>
         <div class="timeline-item">
           <span>Replit</span>
-          <p>登入 Replit，Remix 橋接專案，執行後複製 Preview 網址，將該網址填入程式的 <code>replit_url</code>。</p>
+          <p>登入 Replit，Remix 橋接專案，執行後複製 Preview 網址，將該網址填入程式的 <code class="inline-code">replit_url</code>。</p>
         </div>
         <div class="timeline-item">
           <span>Run</span>
@@ -748,10 +873,13 @@ while True:
 
       <div class="code-card">
         <div class="code-head">
-          <span>main.py｜亮度資料上傳</span>
+          <div class="code-title">
+            <span class="window-dots"><i></i><i></i><i></i></span>
+            <span class="file-name">main.py｜亮度資料上傳</span>
+          </div>
           <button class="copy-btn" data-copy="code-block-2">複製程式碼</button>
         </div>
-        <pre><code id="code-block-2">import network, urequests, utime, bh1750fvi
+<pre class="line-numbers"><code id="code-block-2" class="language-python">import network, urequests, utime, bh1750fvi
 from machine import Pin, I2C
 
 i2c = I2C(scl=Pin(5), sda=Pin(4))
@@ -767,6 +895,7 @@ wifi.connect(ssid, pw)
 
 while not wifi.isconnected():
     pass
+
 print("已連上")
 
 # 請貼上你在 Make 取得的 Webhook URL
@@ -789,10 +918,15 @@ while True:
 
     response.close()
     utime.sleep(5)</code></pre>
+        <div class="code-caption">
+          <span>重點：urequests.get()</span>
+          <span>功能：送出亮度資料</span>
+          <span>建議：請關閉 response</span>
+        </div>
       </div>
 
       <div class="note">
-        <strong>為什麼要加 <code>response.close()</code>？</strong>
+        <strong>為什麼要加 <code class="inline-code">response.close()</code>？</strong>
         D1 mini 的記憶體較小，每次發送請求後關閉 response，可以降低長時間執行時記憶體不足的機率。
       </div>
     </section>
@@ -819,26 +953,29 @@ while True:
         <article class="card">
           <h3>狀態變數 n 的概念</h3>
           <p>
-            可以把 <code>n</code> 想成目前狀態的紀錄：<code>n = 0</code> 代表目前記錄為熄燈，
-            <code>n = 1</code> 代表目前記錄為開燈。只有當亮度狀態和記錄不同時，才需要傳送資料。
+            可以把 <code class="inline-code">n</code> 想成目前狀態的紀錄：<code class="inline-code">n = 0</code> 代表目前記錄為熄燈，
+            <code class="inline-code">n = 1</code> 代表目前記錄為開燈。只有當亮度狀態和記錄不同時，才需要傳送資料。
           </p>
         </article>
       </div>
 
       <div class="note warning">
         <strong>提醒：</strong>
-        「開燈」判斷建議加入 <code>light_level &gt; 0</code>。
-        如果只寫 <code>elif n == 0</code>，即使環境仍然是暗的，下一輪也可能再次送出「開燈」。
+        「開燈」判斷建議加入 <code class="inline-code">light_level &gt; 0</code>。
+        如果只寫 <code class="inline-code">elif n == 0</code>，即使環境仍然是暗的，下一輪也可能再次送出「開燈」。
       </div>
 
       <details>
         <summary>展開參考解答程式碼</summary>
-        <div class="code-card" style="margin-top: 16px;">
+        <div class="code-card">
           <div class="code-head">
-            <span>main.py｜作業參考解答</span>
+            <div class="code-title">
+              <span class="window-dots"><i></i><i></i><i></i></span>
+              <span class="file-name">main.py｜作業參考解答</span>
+            </div>
             <button class="copy-btn" data-copy="code-block-3">複製程式碼</button>
           </div>
-          <pre><code id="code-block-3">import network, urequests, utime, bh1750fvi
+<pre class="line-numbers"><code id="code-block-3" class="language-python">import network, urequests, utime, bh1750fvi
 from machine import Pin, I2C
 
 i2c = I2C(scl=Pin(5), sda=Pin(4))
@@ -854,6 +991,7 @@ wifi.connect(ssid, pw)
 
 while not wifi.isconnected():
     pass
+
 print("已連上")
 
 # 請貼上你在 Make 取得的 Webhook URL
@@ -898,6 +1036,11 @@ while True:
         response.close()
 
     utime.sleep(5)</code></pre>
+          <div class="code-caption">
+            <span>重點：狀態判斷</span>
+            <span>只在改變時傳送</span>
+            <span>作業參考</span>
+          </div>
         </div>
       </details>
     </section>
@@ -925,8 +1068,8 @@ while True:
           <h3>Make 沒有收到資料</h3>
           <ul class="checklist">
             <li>確認 Make Scenario 已經開啟自動執行。</li>
-            <li>確認 Webhook URL 是否貼到 <code>url</code>。</li>
-            <li>確認 Replit Preview URL 是否貼到 <code>replit_url</code>。</li>
+            <li>確認 Webhook URL 是否貼到 <code class="inline-code">url</code>。</li>
+            <li>確認 Replit Preview URL 是否貼到 <code class="inline-code">replit_url</code>。</li>
             <li>先用瀏覽器測試 Webhook 是否能出現 Accepted。</li>
           </ul>
         </article>
@@ -936,8 +1079,8 @@ while True:
         <h3>課堂成果檢核</h3>
         <ul class="checklist">
           <li>序列埠能看到「已連上」。</li>
-          <li>序列埠能看到亮度數值，例如 <code>亮度: 603 lux</code>。</li>
-          <li>執行上傳程式後，序列埠能看到 <code>MAKE 呼叫成功</code>。</li>
+          <li>序列埠能看到亮度數值，例如 <code class="inline-code">亮度: 603 lux</code>。</li>
+          <li>執行上傳程式後，序列埠能看到 <code class="inline-code">MAKE 呼叫成功</code>。</li>
           <li>Google 試算表會新增亮度資料列。</li>
           <li>作業完成後，試算表能記錄「開燈」與「熄燈」狀態。</li>
         </ul>
@@ -947,9 +1090,14 @@ while True:
 
   <footer>
     <div class="page">
-      <p>教材主題：D1 mini 感測器資料蒐集與雲端上傳</p>
+      <p>教材主題：D1 mini 感測器資料蒐集與雲端上傳｜可直接部署於 GitHub Pages</p>
+      <p class="small">建議檔名：<code class="inline-code">index.html</code>｜PDF 建議放置於 <code class="inline-code">doc/make-light-sheet-flow.pdf</code></p>
     </div>
   </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
 
   <script>
     const buttons = document.querySelectorAll(".copy-btn");
@@ -963,6 +1111,7 @@ while True:
           await navigator.clipboard.writeText(code);
           const original = button.innerText;
           button.innerText = "已複製";
+
           setTimeout(() => {
             button.innerText = original;
           }, 1400);
